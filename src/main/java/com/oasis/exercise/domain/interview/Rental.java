@@ -91,7 +91,6 @@ public abstract class Rental {
 	public double getInvoice(double discount) throws Exception {
 		if (this.from == null ||
 			this.to == null) {
-			System.out.println("****");
 			throw new Exception("Rental times NOT Set");
 		}
 		

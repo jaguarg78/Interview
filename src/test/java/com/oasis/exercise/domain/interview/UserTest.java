@@ -32,6 +32,7 @@ public class UserTest {
 	@Rule
 	public ExpectedException thrown = ExpectedException.none();
 	
+	// Se cargan los valores que están en el archivo de Properties
 	@BeforeClass           
 	public static void setProperties() {
 		properties = new Properties();
@@ -46,6 +47,7 @@ public class UserTest {
 		}
 	}
 	
+	// Se validan los valores que se obtienen del archivo de Properties
 	@Test
 	public void propertiesTest() {
 		assertEquals(3.0, priceByHour, 0.01);
@@ -54,7 +56,7 @@ public class UserTest {
 		assertEquals(0.3, discount, 0.01);
 	}
 	
-
+	// Se valida el comportamiento si no se ha iniciado la renta
 	@Test
 	public void RentalsStartExceptionsShouldBeThrown() throws Exception {
 		long delta = 0; 
@@ -72,6 +74,7 @@ public class UserTest {
 		rentWeek.getInvoice(0.0);
 	}
 	
+	// Se valida el comportamiento si no se ha terminado la renta
 	@Test
 	public void RentalsIStopExceptionsNoStartShouldBeThrown() throws Exception {
 		long delta = 0; 
@@ -104,6 +107,7 @@ public class UserTest {
 		rentWeek.getInvoice(0.0);
 	}
 	
+	// Validación de valores parciales
 	@Test
 	public void RentalsShouldReturnCorrectPartialValues() throws Exception {
 		long delta = 0; 
@@ -123,6 +127,7 @@ public class UserTest {
 		}
 	}
 	
+	// Validación de valores finales
 	@Test
 	public void RentalsShouldReturnCorrectInvoiceValues() throws Exception {
 		long delta = 0; 
@@ -142,6 +147,7 @@ public class UserTest {
 		assertEquals((priceByWeek * (delta + 1)), rentWeek.getPartial(0.0), 0.01);
 	}
 	
+	// Creación de Usuario Principal incluyendole otro Principal 
 	@Test
 	public void PrincipalShouldNotHavePrincipalRelatives() throws Exception {
 		List<User> relatives = new ArrayList<>();
@@ -162,6 +168,7 @@ public class UserTest {
 		principal2.addRelatives(relatives);
 	}
 	
+	// Se intenta agregar mas de 5 rentas a una promoción
 	@Test
 	public void PromotionAddRentalExceptionExceededTest() throws Exception {
 		RentalPromotion rentalPromotion = new RentalPromotion();
@@ -176,19 +183,23 @@ public class UserTest {
 		rentalPromotion.addRental(new RentalByWeek(priceByWeek));
 	}
 	
+	// Se calculan los invoice de una Promoción que utiliza todos los tipos de renta
+	// Por lo que tambien sirve para validar la generación del valor final para una renta
+	// de cualquier otro tipo.
 	@Test
 	public void PromotionRentalShouldGiveCorrectValuesTest() throws Exception {
 		RentalPromotion rentalPromotion = new RentalPromotion();
 		rentalPromotion.addRental(new RentalByHour(priceByHour));
 		rentalPromotion.addRental(new RentalByHour(priceByHour));
 		rentalPromotion.addRental(new RentalByHour(priceByHour));
-		rentalPromotion.addRental(new RentalByHour(priceByHour));
+		rentalPromotion.addRental(new RentalByWeek(priceByWeek));
 		rentalPromotion.addRental(new RentalByDay(priceByDay));
 		
 		rentalPromotion.startRental();
 		rentalPromotion.stopRental();
 		
-		// (3 + 3 + 3 + 3 + 5) * 0.7 = 11.9
-		assertEquals(11.9, rentalPromotion.getInvoice(discount), 0.01);
+		// (3 + 3 + 3 + 12 + 5) * 0.7 = 18.2
+		double expected = ((3 * (priceByHour)) +  priceByWeek + priceByDay) * (1.0 - discount);
+		assertEquals(expected, rentalPromotion.getInvoice(discount), 0.01);
 	}
 }

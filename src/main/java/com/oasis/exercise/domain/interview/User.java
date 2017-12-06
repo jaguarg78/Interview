@@ -52,7 +52,6 @@ public class User {
 		double acc = 0.0;
 		for (Rental rental : rentals) {
 			acc += rental.getInvoice();
-			System.out.println(acc);
 		}
 		
 		return acc;
