@@ -39,8 +39,9 @@ Los tests creados incluyen:
 - Asociación de rentas a los diferentes tipos de usuarios.
 - Obtención de costos parciales(Partial) y finales(Invoice).
 - Manejo de excepciones en casos de falta de inicialización de la renta, finalización de la renta  cuando se pida algún costo acumulado.
-- Inclusión de mas de 5 tipos de renta para una promoción.
-- Calculo de los valores por cada tipo de renta.
+  - Inclusión de mas de 5 tipos de renta para una promoción. (Se lanza excepción)
+  - Inclusión de usario Principal a otro Principal. (Se lanza excepción)
+- Cálculo de los valores por cada tipo de renta.
 
 Para ejecutar los tests:
 - Manualmente usando maven:
